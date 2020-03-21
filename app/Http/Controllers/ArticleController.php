@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use Illuminate\Http\Request;
 use App\Http\Resources\ArticleResource;
+use Response;
 
 class ArticleController extends Controller
 {
@@ -30,7 +31,7 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        $article = $request->isMethod('put') ? Article::findOrFail($request->article_id) : new Article;
+        $article = new Article;
 
         $article->id = $request->input('article_id');
         $article->user_id = $request->input('user_id');
@@ -41,6 +42,25 @@ class ArticleController extends Controller
             return new ArticleResource($article);
         }
         
+    }
+
+    public function update(Request $request, Article $article)
+    {
+        $article = Article::findOrFail($request->id);
+
+        $article->id = $request->id;
+        $article->user_id = $request->user_id;
+        $article->title = $request->input('title');
+        $article->body = $request->input('body');
+
+        // dd($request->all());
+        
+        if($article->save()) {
+            return new ArticleResource($article);
+
+            // return $this->sendResponse($article->toArray(), 'update successfully');
+
+        }
     }
 
 
