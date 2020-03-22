@@ -44901,7 +44901,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             article: {
                 id: '',
-                user_id: '',
                 title: '',
                 body: ''
             },
@@ -44961,45 +44960,69 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 });
             }
         },
-        editArticle: function editArticle(articleId, currentPage) {
+        editArticle: function editArticle(article, currentPage) {
 
-            alert('edit');
-            // if (confirm("ok to delete")) 
-            // {
-            //     fetch(  `api/article/${articleId}`,{
-            //         method: 'delete'
-            //     })
-            //     .then( res => res.json())
-            //     .then( res => {
-            //         // console.log(res);
-            //         alert(' Article removed ');
-            //         this.fetchArticles( 'api/articles?page='+currentPage );
-            //     })
-            //     .catch( err => console.log(err) );
+            this.edit = true;
+            this.article.id = article.id;
+            this.article.title = article.title;
+            this.article.body = article.body;
 
-            // }
+            window.scrollTo(0, 0);
+
+            // alert(article.id);
+
         },
         addArticle: function addArticle() {
             var _this3 = this;
 
-            fetch('api/article', {
-                method: 'post',
-                body: JSON.stringify(this.article),
-                headers: {
-                    'content-type': 'application/json'
-                }
-            }).then(function (res) {
-                return res.json();
-            }).then(function (res) {
-                // console.log(res);
-                _this3.article.title = '';
-                _this3.article.body = '';
-                alert('Article created');
+            if (this.edit === false) {
+                console.log(JSON.stringify(this.article));
 
-                _this3.fetchArticles();
-            }).catch(function (err) {
-                return console.log(err);
-            });
+                fetch('api/article', {
+                    method: 'post',
+                    body: JSON.stringify(this.article),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (res) {
+                    // console.log(res);
+                    _this3.article.id = '';
+                    _this3.article.title = '';
+                    _this3.article.body = '';
+                    alert('Article created');
+
+                    _this3.fetchArticles();
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            } else {
+                console.log(JSON.stringify(this.article));
+
+                //api call to update
+                fetch('api/article', {
+                    method: 'put',
+
+                    body: JSON.stringify(this.article),
+
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (res) {
+                    // console.log(res);
+                    _this3.article.id = '';
+                    _this3.article.title = '';
+                    _this3.article.body = '';
+                    alert('Article updated');
+
+                    _this3.fetchArticles();
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
         }
     }
 });
@@ -45174,13 +45197,10 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "btn btn-warning mt-2",
+                staticClass: "btn btn-warning mb-2",
                 on: {
                   click: function($event) {
-                    return _vm.editArticle(
-                      article.id,
-                      _vm.pagination.current_page
-                    )
+                    return _vm.editArticle(article, _vm.pagination.current_page)
                   }
                 }
               },

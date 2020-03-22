@@ -60,8 +60,8 @@
             <p> {{ article.body }} </p>
 
             <!-- edit article -->
-            <button class="btn btn-warning mt-2" 
-              @click="editArticle(article.id, pagination.current_page)"
+            <button class="btn btn-warning mb-2" 
+              @click="editArticle(article, pagination.current_page)"
             > 
                 Edit 
             </button>
@@ -94,7 +94,6 @@
 
                 article: {
                     id: '',
-                    user_id: '',
                     title: '',
                     body: ''
                 },
@@ -157,45 +156,74 @@
 
             },
 
-            editArticle( articleId, currentPage ){
+            editArticle( article, currentPage ){
+                
+                this.edit = true;
+                this.article.id = article.id;
+                this.article.title = article.title;
+                this.article.body = article.body;
 
-                    alert('edit');
-                // if (confirm("ok to delete")) 
-                // {
-                //     fetch(  `api/article/${articleId}`,{
-                //         method: 'delete'
-                //     })
-                //     .then( res => res.json())
-                //     .then( res => {
-                //         // console.log(res);
-                //         alert(' Article removed ');
-                //         this.fetchArticles( 'api/articles?page='+currentPage );
-                //     })
-                //     .catch( err => console.log(err) );
-                    
-                // }
+                window.scrollTo(0,0);
+                
+                // alert(article.id);
+ 
+                
 
             },
 
             addArticle(){
 
-                fetch('api/article', {
-                    method: 'post',
-                    body: JSON.stringify(this.article),
-                    headers:{
-                        'content-type': 'application/json'
-                    }
-                })
-                .then( res => res.json())
-                .then( res => {
-                    // console.log(res);
-                    this.article.title = '';
-                    this.article.body = '';
-                    alert('Article created');
+                if (this.edit === false) 
+                {
+                    console.log(JSON.stringify(this.article));
 
-                    this.fetchArticles();
-                })
-                .catch( err => console.log(err) );                
+                    fetch('api/article', {
+                        method: 'post',
+                        body: JSON.stringify(this.article),
+                        headers:{
+                            'content-type': 'application/json'
+                        }
+                    })
+                    .then( res => res.json())
+                    .then( res => {
+                        // console.log(res);
+                        this.article.id = '';
+                        this.article.title = '';
+                        this.article.body = '';
+                        alert('Article created');
+
+                        this.fetchArticles();
+                    })
+                    .catch( err => console.log(err) );                
+                    
+                }
+                else
+                {
+                    console.log(JSON.stringify(this.article));
+                    
+                    //api call to update
+                    fetch( 'api/article', {
+                        method: 'put',
+                    
+                        body: JSON.stringify(this.article),
+
+                        headers:{
+                            'content-type': 'application/json'
+                        }
+                    })
+                    .then( res => res.json())
+                    .then( res => {
+                        // console.log(res);
+                        this.article.id = '';
+                        this.article.title = '';
+                        this.article.body = '';
+                        alert('Article updated');
+
+                        this.fetchArticles();
+                    })
+                    .catch( err => console.log(err) ); 
+                }
+                
             },
 
 
