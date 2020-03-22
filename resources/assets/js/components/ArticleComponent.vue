@@ -40,8 +40,15 @@
             v-for="article in articles" 
             v-bind:key="article.id"
         >
-            <h3> {{ article.title }} </h3>
+            <h3> {{ article.title }} | {{ article.id }}</h3>
             <p> {{ article.body }} </p>
+
+            <!-- delete article -->
+            <button class="btn btn-danger" 
+              @click="deleteArticle(article.id, pagination.current_page)"
+            > 
+                Delete 
+            </button>
         </div>
     </div>
 </template>
@@ -49,18 +56,18 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log('article Component mounted.')
         },
 
         data() {
             return {
                 articles: [],
 
-                article: {
-                    id: '',
-                    title: '',
-                    body: ''
-                },
+                // article: {
+                //     id: '',
+                //     title: '',
+                //     body: ''
+                // },
                 
                 article_id: '',
                 pagination: {},
@@ -99,7 +106,28 @@
 
                 // console.log(pagination);
                 
-            }
+            },
+
+            deleteArticle( articleId, currentPage ){
+                
+                if (confirm("ok to delete")) 
+                {
+                    fetch(  `api/article/${articleId}`,{
+                        method: 'delete'
+                    })
+                    .then( res => res.json())
+                    .then( res => {
+                        // console.log(res);
+                        alert(' Article removed ');
+                        this.fetchArticles( 'api/articles?page='+currentPage );
+                    })
+                    .catch( err => console.log(err) );
+                    
+                }
+
+            },
+
+
         },
     }
 </script>

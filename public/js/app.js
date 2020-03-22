@@ -42039,7 +42039,7 @@ function parse (
     // tree management
     if (!stack.length && element !== root) {
       // allow root elements with v-if, v-else-if and v-else
-      if (root.if && (element.elseif || element.Else)) {
+      if (root.if && (element.elseif || element.else)) {
         {
           checkRootConstraints(element);
         }
@@ -44854,20 +44854,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
-        console.log('Component mounted.');
+        console.log('article Component mounted.');
     },
     data: function data() {
         return {
             articles: [],
 
-            article: {
-                id: '',
-                title: '',
-                body: ''
-            },
+            // article: {
+            //     id: '',
+            //     title: '',
+            //     body: ''
+            // },
 
             article_id: '',
             pagination: {},
@@ -44906,6 +44913,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.pagination = pagination;
 
             // console.log(pagination);
+        },
+        deleteArticle: function deleteArticle(articleId, currentPage) {
+            var _this2 = this;
+
+            if (confirm("ok to delete")) {
+                fetch('api/article/' + articleId, {
+                    method: 'delete'
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (res) {
+                    // console.log(res);
+                    alert(' Article removed ');
+                    _this2.fetchArticles('api/articles?page=' + currentPage);
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
         }
     }
 });
@@ -44995,9 +45019,27 @@ var render = function() {
           "div",
           { key: article.id, staticClass: "card card-body mb-3" },
           [
-            _c("h3", [_vm._v(" " + _vm._s(article.title) + " ")]),
+            _c("h3", [
+              _vm._v(" " + _vm._s(article.title) + " | " + _vm._s(article.id))
+            ]),
             _vm._v(" "),
-            _c("p", [_vm._v(" " + _vm._s(article.body) + " ")])
+            _c("p", [_vm._v(" " + _vm._s(article.body) + " ")]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-danger",
+                on: {
+                  click: function($event) {
+                    return _vm.deleteArticle(
+                      article.id,
+                      _vm.pagination.current_page
+                    )
+                  }
+                }
+              },
+              [_vm._v(" \n            Delete \n        ")]
+            )
           ]
         )
       })
