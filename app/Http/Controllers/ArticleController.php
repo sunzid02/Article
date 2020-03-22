@@ -16,7 +16,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-       $articles = Article::paginate(5);
+       $articles = Article::orderBy('id', 'desc')->paginate(5);
 
        return ArticleResource::collection($articles);
     }
@@ -34,7 +34,7 @@ class ArticleController extends Controller
         $article = new Article;
 
         $article->id = $request->input('article_id');
-        $article->user_id = $request->input('user_id');
+        $article->user_id = rand(1,5);
         $article->title = $request->input('title');
         $article->body = $request->input('body');
 
@@ -44,23 +44,33 @@ class ArticleController extends Controller
         
     }
 
-    public function update(Request $request, Article $article)
+    public function update(Request $request)
     {
-        $article = Article::findOrFail($request->id);
+        // $article = Article::findOrFail($request->id);
 
-        $article->id = $request->id;
-        $article->user_id = $request->user_id;
-        $article->title = $request->input('title');
-        $article->body = $request->input('body');
+        // $article->id = $request->id;
+        // $article->user_id = $request->user_id;
+        // $article->title = $request->input('title');
+        // $article->body = $request->input('body');
+        // dd( $request->all() );
 
         // dd($request->all());
-        
-        if($article->save()) {
-            return new ArticleResource($article);
+        $update = Article::where('id', $request->id)->update([
+            'user_id' => rand(1,5),
+            'title' => $request->title,
+            'body' => $request->body,
+        ]);
 
-            // return $this->sendResponse($article->toArray(), 'update successfully');
+        return \json_encode(true);
+        // dd($request->all());
+            
+        // if($update == 1) {
+        //     $article = Article::findOrFail($request->id);
+        //     return new ArticleResource($article);
 
-        }
+        //     // return $this->sendResponse($article->toArray(), 'update successfully');
+
+        // }
     }
 
 
