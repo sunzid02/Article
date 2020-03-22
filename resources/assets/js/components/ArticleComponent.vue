@@ -173,7 +173,7 @@
 
             addArticle(){
 
-                if (this.edit === false) 
+                if (this.edit == false) 
                 {
                     console.log(JSON.stringify(this.article));
 

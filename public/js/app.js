@@ -44975,7 +44975,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addArticle: function addArticle() {
             var _this3 = this;
 
-            if (this.edit === false) {
+            if (this.edit == false) {
                 console.log(JSON.stringify(this.article));
 
                 fetch('api/article', {
