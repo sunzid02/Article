@@ -2,6 +2,22 @@
     <div class="container">
         <h2>Articles</h2>
 
+        <!-- create article -->
+        <form @submit.prevent="addArticle" class="mb-3">
+            <!-- title -->
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Title"  v-model="article.title">
+            </div>
+
+            <!-- body -->
+            <div class="form-group">
+                <textarea type="text" class="form-control" placeholder="body"  v-model="article.body"></textarea>
+            </div>      
+
+            <button type="submit" class="btn btn-light btn-block">Save</button>      
+        </form>
+
+        <br><br>
         <!-- pagination -->
         <nav aria-label="Page navigation example mt-2">
             <ul class="pagination">
@@ -35,13 +51,22 @@
         </nav>
 
 
-
+        <!-- show articles -->
         <div class="card card-body mb-3" 
             v-for="article in articles" 
             v-bind:key="article.id"
         >
-            <h3> {{ article.title }} | {{ article.id }}</h3>
+            <h3> {{ article.id }}. {{ article.title }} </h3>
             <p> {{ article.body }} </p>
+
+            <!-- edit article -->
+            <button class="btn btn-warning mt-2" 
+              @click="editArticle(article.id, pagination.current_page)"
+            > 
+                Edit 
+            </button>
+
+
 
             <!-- delete article -->
             <button class="btn btn-danger" 
@@ -49,6 +74,10 @@
             > 
                 Delete 
             </button>
+
+
+
+
         </div>
     </div>
 </template>
@@ -63,11 +92,12 @@
             return {
                 articles: [],
 
-                // article: {
-                //     id: '',
-                //     title: '',
-                //     body: ''
-                // },
+                article: {
+                    id: '',
+                    user_id: '',
+                    title: '',
+                    body: ''
+                },
                 
                 article_id: '',
                 pagination: {},
@@ -125,6 +155,47 @@
                     
                 }
 
+            },
+
+            editArticle( articleId, currentPage ){
+
+                    alert('edit');
+                // if (confirm("ok to delete")) 
+                // {
+                //     fetch(  `api/article/${articleId}`,{
+                //         method: 'delete'
+                //     })
+                //     .then( res => res.json())
+                //     .then( res => {
+                //         // console.log(res);
+                //         alert(' Article removed ');
+                //         this.fetchArticles( 'api/articles?page='+currentPage );
+                //     })
+                //     .catch( err => console.log(err) );
+                    
+                // }
+
+            },
+
+            addArticle(){
+
+                fetch('api/article', {
+                    method: 'post',
+                    body: JSON.stringify(this.article),
+                    headers:{
+                        'content-type': 'application/json'
+                    }
+                })
+                .then( res => res.json())
+                .then( res => {
+                    // console.log(res);
+                    this.article.title = '';
+                    this.article.body = '';
+                    alert('Article created');
+
+                    this.fetchArticles();
+                })
+                .catch( err => console.log(err) );                
             },
 
 

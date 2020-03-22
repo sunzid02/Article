@@ -16,7 +16,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-       $articles = Article::orderBy('created_at', 'desc')->paginate(5);
+       $articles = Article::orderBy('id', 'desc')->paginate(5);
 
        return ArticleResource::collection($articles);
     }
@@ -34,7 +34,7 @@ class ArticleController extends Controller
         $article = new Article;
 
         $article->id = $request->input('article_id');
-        $article->user_id = $request->input('user_id');
+        $article->user_id = rand(1,5);
         $article->title = $request->input('title');
         $article->body = $request->input('body');
 
